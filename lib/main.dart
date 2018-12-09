@@ -15,8 +15,40 @@ class MyApp extends StatelessWidget {
 
 class RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
+  final Set<WordPair> _saved = new Set<WordPair>();
 
   final _biggerFont = const TextStyle(fontSize: 19.0);
+
+  void _pushSaved() {
+  Navigator.of(context).push(
+    new MaterialPageRoute<void>(
+      builder: (BuildContext context) {
+        final Iterable<ListTile> tiles = _saved.map(
+          (WordPair pair) {
+            return new ListTile(
+              title: new Text(
+                pair.asPascalCase,
+                style: _biggerFont,
+              ),
+            );
+          },
+        );
+        final List<Widget> divided = ListTile.divideTiles(
+            context: context,
+            tiles: tiles,
+          ).toList();
+
+        return new Scaffold( 
+          appBar: new AppBar(
+            title: const Text('Saved Names'),
+          ),
+          body: new ListView(children: divided),
+        );
+      },
+    ),
+  );
+}
+
 
   Widget _buildSuggestions() {
     return ListView.builder(
@@ -33,11 +65,25 @@ class RandomWordsState extends State<RandomWords> {
   }
 
   Widget _buildRow(WordPair pair) {
+    final bool _alreadySaved =  _saved.contains(pair);
     return ListTile(
       title: Text(
         pair.asPascalCase,
         style: _biggerFont,
       ),
+      trailing: new Icon(
+        _alreadySaved ? Icons.favorite : Icons.favorite_border,
+        color: _alreadySaved? Colors.red: null
+      ),
+      onTap: (){
+        setState(() {
+                  if (_alreadySaved){
+                    _saved.remove(pair);
+                  }else{
+                    _saved.add(pair);
+                  }
+                });
+      },
     );
   }
 
@@ -46,6 +92,9 @@ class RandomWordsState extends State<RandomWords> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Startup Namer - Pick a Name before you change the world'),
+        actions: <Widget>[ 
+          new IconButton(icon: const Icon(Icons.list), onPressed: _pushSaved )
+        ],
       ),
       body: _buildSuggestions(),
     );
