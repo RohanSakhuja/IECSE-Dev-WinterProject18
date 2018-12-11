@@ -13,17 +13,20 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class RandomWordsState extends State<RandomWords> {
-  final _suggestions = <WordPair>[];
-  final Set<WordPair> _saved = new Set<WordPair>();
+class SavedScreen extends StatelessWidget {
+
+  Set<WordPair> savedSet;
 
   final _biggerFont = const TextStyle(fontSize: 19.0);
 
-  void _pushSaved() {
-  Navigator.of(context).push(
-    new MaterialPageRoute<void>(
-      builder: (BuildContext context) {
-        final Iterable<ListTile> tiles = _saved.map(
+  SavedScreen(Set savedSet ){
+    this.savedSet = savedSet;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    final Iterable<ListTile> tiles = savedSet.map(
           (WordPair pair) {
             return new ListTile(
               title: new Text(
@@ -33,22 +36,26 @@ class RandomWordsState extends State<RandomWords> {
             );
           },
         );
-        final List<Widget> divided = ListTile.divideTiles(
+    
+    final List<Widget> divided = ListTile.divideTiles(
             context: context,
             tiles: tiles,
           ).toList();
-
-        return new Scaffold( 
+ 
+    return new Scaffold( 
           appBar: new AppBar(
             title: const Text('Saved Names'),
           ),
           body: new ListView(children: divided),
         );
-      },
-    ),
-  );
+  }
 }
 
+class RandomWordsState extends State<RandomWords> {
+  final _suggestions = <WordPair>[];
+  final Set<WordPair> _saved = new Set<WordPair>();
+
+  final _biggerFont = const TextStyle(fontSize: 19.0);
 
   Widget _buildSuggestions() {
     return ListView.builder(
@@ -93,8 +100,11 @@ class RandomWordsState extends State<RandomWords> {
       appBar: AppBar(
         title: Text('Startup Namer - Pick a Name before you change the world'),
         actions: <Widget>[ 
-          new IconButton(icon: const Icon(Icons.list), onPressed: _pushSaved )
-        ],
+          new IconButton(icon: const Icon(Icons.list), onPressed:()
+          {
+            Navigator.push(context, MaterialPageRoute(builder: (context) => SavedScreen(_saved)));
+          }
+          ) ],
       ),
       body: _buildSuggestions(),
     );
