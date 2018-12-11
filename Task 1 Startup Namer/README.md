@@ -1,0 +1,1 @@
+<img src="https://github.com/RohanSakhuja/IECSE-Dev-WinterProject18/blob/master/wiki%20assets/startupNamer.gif" width="350" height="600">
