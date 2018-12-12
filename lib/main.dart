@@ -14,7 +14,6 @@ class MyApp extends StatelessWidget {
 }
 
 class SavedScreen extends StatelessWidget {
-
   Set<WordPair> savedSet;
 
   final _biggerFont = const TextStyle(fontSize: 19.0);
@@ -33,8 +32,11 @@ class SavedScreen extends StatelessWidget {
                 pair.asPascalCase,
                 style: _biggerFont,
               ),
+              onTap: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context) => NamedPage(pair)));
+              }
             );
-          },
+          }
         );
     
     final List<Widget> divided = ListTile.divideTiles(
@@ -44,14 +46,15 @@ class SavedScreen extends StatelessWidget {
  
     return new Scaffold( 
           appBar: new AppBar(
-            title: const Text('Saved Names'),
+            title: const Text('Saved Names')
           ),
-          body: new ListView(children: divided),
+          body: new ListView(children: divided), 
         );
   }
 }
 
 class RandomWordsState extends State<RandomWords> {
+  
   final _suggestions = <WordPair>[];
   final Set<WordPair> _saved = new Set<WordPair>();
 
@@ -114,4 +117,43 @@ class RandomWordsState extends State<RandomWords> {
 class RandomWords extends StatefulWidget {
   @override
   RandomWordsState createState() => new RandomWordsState();
+}
+
+
+class NamedPage extends StatelessWidget {
+  WordPair pair;
+
+  final _biggerFont = TextStyle(fontSize: 22.0,fontWeight: FontWeight.bold);  
+  final _smallerFont = TextStyle(fontSize: 18.0);
+
+  NamedPage(WordPair pair){
+    this.pair = pair;
+  }
+
+  Widget detailScreen(){
+
+    String name1 = "How does this website sound to you?"; 
+    String name2 = "https://www.${pair.asLowerCase}.com ";
+    String email = "Your email will be:";  
+    String email2 = "ceo@${pair.asLowerCase}.com";
+    
+    Widget websiteName1 = Center(child: Text(name1,style: _smallerFont,softWrap: true));
+    Widget emailName1 = Center(child:Text(email, style: _smallerFont, softWrap: true));
+    Widget websiteName2 = Center(child: Text(name2,style: _biggerFont,softWrap: true));
+    Widget emailName2 = Center(child:Text(email2, style: _biggerFont, softWrap: true));
+
+    return Center(child: ListView(
+      children: [websiteName1,websiteName2,emailName1,emailName2]
+    ));
+  }
+
+  @override
+  Widget build(BuildContext context){
+
+    return Scaffold(appBar: AppBar(title: Text(pair.asPascalCase)),
+    body: detailScreen()
+    );
+
+  }
+
 }
