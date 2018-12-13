@@ -7,7 +7,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Startup Name Generator',
-      home: LoginPage(),
+      home: LoginPage()
     );
   }
 }
@@ -15,19 +15,27 @@ class MyApp extends StatelessWidget {
 
 class LoginPage extends StatelessWidget {
 
+  //From and Scaffold States
   final formKey = new GlobalKey<FormState>();
   final scaffoldKey = new GlobalKey<ScaffoldState>();
 
+  //unused Controllers
   final TextEditingController controller = new TextEditingController();
   final TextEditingController controllerPass = new TextEditingController();
 
+  //Initialising Email and Password
   String _email = "";
   String _password = "";
 
-  Widget detailScreen(){
+  Widget detailScreen(BuildContext context){
   
-    Widget logo = Container(child: Image.asset('assets/LogoCompBgLess.png',width: 200.0,height: 200.0),margin: const EdgeInsets.all(10.0));
+    //Widget for Logo
+    Widget logo = Container(child: Image.asset('assets/LogoCompBgLess.png',
+      width: 200.0,
+      height: 200.0),
+       margin: const EdgeInsets.all(10.0));
     
+    //Validation methods
     String _emailvalidation(String val){
       return !val.contains('@') ? "Invalid email":null;
     }
@@ -36,28 +44,32 @@ class LoginPage extends StatelessWidget {
       return !(val.length > 8)? "Invalid password":null;  
     }
 
-
+    //Method for Submit Button
     void _submitted(){
       if(formKey.currentState.validate()){
-      final form = formKey.currentState;
-      form.save();
-      print("Email: $_email\nPassword:$_password");
-      final _snackbar = new SnackBar(content: new Text("Email: $_email\nPassword: $_password"));
-      scaffoldKey.currentState.showSnackBar(_snackbar);
+        final form = formKey.currentState;
+        form.save();
+      
+        //print("Email: $_email\nPassword:$_password");
+      
+        final _snackbar = new SnackBar(content: new Text("Email: $_email\nPassword: $_password"));
+        scaffoldKey.currentState.showSnackBar(_snackbar);
+        
+        final welcomeScreen = MaterialPageRoute(builder: (context) => WelcomePage(_email));
+        Navigator.push(context, welcomeScreen);
       }
     }
 
+    //Widget for Username
     Widget username = Container(child: TextFormField(
       decoration: InputDecoration(labelText: "Enter Username",
-      hintText: "Username",
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(30.0)
-      )
-      ),
+      hintText: "Username",                            
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(30.0))),
       validator: _emailvalidation,
       onSaved: (String val)=> _email = val),
       margin: const EdgeInsets.all(20.0));
     
+    //Widget for Password
     Widget password = Container(child: TextFormField(
       decoration: InputDecoration(labelText: "Enter Password",
       hintText: "Password",
@@ -70,6 +82,8 @@ class LoginPage extends StatelessWidget {
       onSaved: (String val) => _password = val),
       margin: const EdgeInsets.all(20.0));
 
+
+    //Widget for Submit Button
     Widget submitButton = Container(child: RaisedButton(child: new Text("SUBMIT"), padding: EdgeInsets.all(8.0),
       onPressed: _submitted, 
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0))
@@ -77,11 +91,12 @@ class LoginPage extends StatelessWidget {
       margin: const EdgeInsets.all(20.0));
     
 
-    return Form(key:formKey,child:Column(
-      children: [logo,username,password,submitButton],
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-    ));
+    return Form(key:formKey,
+      child:Column(
+        children: [logo,username,password,submitButton],
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center)
+    );
   }
 
   @override
@@ -89,8 +104,42 @@ class LoginPage extends StatelessWidget {
     // title: Text("Login Page")
     return Scaffold(
     key: scaffoldKey,
-    body: detailScreen()
+    body: detailScreen(context)
     );
+  }
+
+}
+
+class WelcomePage extends StatelessWidget{
+
+  String username = "";
+
+  WelcomePage(String _username){
+    this.username = _username;
+  }
+
+
+
+  final _biggerFont = const TextStyle(fontSize: 30.0,fontWeight: FontWeight.bold);
+  final _smallerFont = const TextStyle(fontSize: 25.0);
+
+  Widget mainPage(){
+    return Column(children: [Image.asset('assets/LogoCompBgLess.png',width: 200.0,height: 200.0),
+                              Text("Welcome",style: _biggerFont,textAlign: TextAlign.justify),
+                              Text("$username",style: _biggerFont,textAlign: TextAlign.justify),
+                              Text("Whatever this is supposed to be",style: _smallerFont,textAlign: TextAlign.justify)],
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  );
+  }
+
+  Widget build(BuildContext context){
+    return WillPopScope(
+      onWillPop: () => Future.value(false),
+      child: Scaffold(
+        body: mainPage()
+        )
+      );
   }
 
 }
