@@ -124,13 +124,27 @@ class WelcomePage extends StatelessWidget{
   final _smallerFont = const TextStyle(fontSize: 25.0);
 
   Widget mainPage(){
-    return Column(children: [Image.asset('assets/LogoCompBgLess.png',width: 200.0,height: 200.0),
-                              Text("Welcome",style: _biggerFont,textAlign: TextAlign.justify),
-                              Text("$username",style: _biggerFont,textAlign: TextAlign.justify),
-                              Text("Whatever this is supposed to be",style: _smallerFont,textAlign: TextAlign.justify)],
+    
+    Widget logo = Container(child: Image.asset('assets/LogoCompBgLess.png',
+      width: 200.0,
+      height: 200.0),
+       margin: const EdgeInsets.all(10.0));
+    
+    Widget messageID = Container(child:Text("Welcome! ${usernameExtract(username)}",style: _biggerFont,textAlign: TextAlign.center),
+                                  margin: const EdgeInsets.all(20.0) );
+    
+    Widget subMessage = Container(child:Text("To whatever this is supposed to be ",style: _smallerFont,textAlign: TextAlign.center),
+                                  margin: const EdgeInsets.all(20.0) );
+
+
+    return Column(children: [logo, messageID, subMessage],
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   );
+  }
+
+  String usernameExtract(String username){
+    return username.split('@')[0];
   }
 
   Widget build(BuildContext context){
@@ -141,5 +155,4 @@ class WelcomePage extends StatelessWidget{
         )
       );
   }
-
 }
