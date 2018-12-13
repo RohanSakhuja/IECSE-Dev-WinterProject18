@@ -45,37 +45,58 @@ class _LoginState extends State<Login> {
 
             Padding(
                 padding: EdgeInsets.only(top: _minimumPadding, bottom: _minimumPadding),
-                child: TextField(
+                child: Center(
+                    child: Container(
+                        alignment: Alignment.center,
+                        width: 320.0,
+                        height: 35.0,
+                        child: TextFormField(
                   decoration: InputDecoration(
-                      labelText: 'EMAIL',
-                      hintText: 'Enter EMAIL ID',
+                      contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
+                      labelText: '  EMAIL',
+                      hintText: '  Enter EMAIL ID',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.0)
                       )
                   ),
-                )),
+                )))),
 
             Padding(
                 padding: EdgeInsets.only(top: _minimumPadding, bottom: _minimumPadding),
-                child: TextField(
+                child: Center(
+                    child: Container(
+                        alignment: Alignment.center,
+                        width: 320.0,
+                        height: 50.0,
+                        child: TextFormField(
                   decoration: InputDecoration(
-                      labelText: 'PASSWORD',
-                      hintText: 'Enter Password',
+                      contentPadding: const EdgeInsets.symmetric(vertical: 10.0),
+                      labelText: '  PASSWORD',
+                      hintText: '  Enter Password',
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30.0)
                       )
                   ),
-                )),
+                )))),
 
 
             Padding(
                 padding: EdgeInsets.only(bottom: _minimumPadding, top: _minimumPadding),
                 child: Row(children: <Widget>[
                   Expanded(
-                    child: RaisedButton(
+
+              child: Container(
+              alignment: Alignment.center,
+               width: 790.0,
+               height: 60.0,
+                    child: ButtonTheme(
+                      minWidth: 320.0,
+                      height: 40.0,
+                      child: RaisedButton(
                       color: Colors.blue,
                       // ignore: expected_token
-                      child: new Text('log in'),
+                      child:  Text('log in'),
+                        textColor: Colors.white,
                       elevation: 10.0,
                       shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
                       onPressed: () { print('Button Pressed');
@@ -84,7 +105,8 @@ class _LoginState extends State<Login> {
                     ),
                   ),
 
-                ],)),
+
+             ))],)),
 
           ],
         ),
