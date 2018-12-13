@@ -1,75 +1,101 @@
 import 'package:flutter/material.dart';
-import 'package:english_words/english_words.dart';
 
-void main() => runApp(MyApp());
+void main() {
 
-class MyApp extends StatelessWidget {
+  runApp(
+      MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'IECSE LOGIN',
+        home: SIForm(),
+      )
+  );
+}
+
+class SIForm extends StatefulWidget {
+
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Startup Name Generator',
-      home: RandomWords()
+  State<StatefulWidget> createState() {
 
-      // ignore: expected_token
-      );
+    return _SIFormState();
   }
 }
-class RandomWordsState extends State<RandomWords> { // ignore: type_argument_not_matching_bounds
-  // TODO Add build method
-  final _suggestions = <WordPair>[];
 
-  final _biggerFont = const TextStyle(fontSize: 18.0);
+class _SIFormState extends State<SIForm> {
 
-  Widget _buildSuggestions() {
-    return ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        // The itemBuilder callback is called once per suggested word pairing,
-        // and places each suggestion into a ListTile row.
-        // For even rows, the function adds a ListTile row for the word pairing.
-        // For odd rows, the function adds a Divider widget to visually
-        // separate the entries. Note that the divider may be difficult
-        // to see on smaller devices.
-        itemBuilder: (context, i) {
-          // Add a one-pixel-high divider widget before each row in theListView.
-          if (i.isOdd) return Divider();
-
-          // The syntax "i ~/ 2" divides i by 2 and returns an integer result.
-          // For example: 1, 2, 3, 4, 5 becomes 0, 1, 1, 2, 2.
-          // This calculates the actual number of word pairings in the ListView,
-          // minus the divider widgets.
-          final index = i ~/ 2;
-          // If you've reached the end of the available word pairings...
-          if (index >= _suggestions.length) {
-            // ...then generate 10 more and add them to the suggestions list.
-            _suggestions.addAll(generateWordPairs().take(10));
-          }
-          return _buildRow(_suggestions[index]);
-        }
-    );
-  }
-
-  Widget _buildRow(WordPair pair) {
-    return ListTile(
-      title: Text(
-        pair.asPascalCase,
-        style: _biggerFont,
-      ),
-    );
-  }
+  var _currencies = ['Rupees', 'Dollars', 'Pounds'];
+  final double  _minimumPadding = 5.0;
 
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold (
+    return Scaffold(
+//			resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text('Startup Name Generator'),
+        title: Text('IECSE LOGIN'),
       ),
-      body: _buildSuggestions(),
+
+      body: Container(
+
+        margin: EdgeInsets.all(_minimumPadding * 2),
+        child: ListView(
+          children: <Widget>[
+
+            getImageAsset(),
+
+            Padding(
+                padding: EdgeInsets.only(top: _minimumPadding, bottom: _minimumPadding),
+                child: TextField(
+                  decoration: InputDecoration(
+                      labelText: 'EMAIL',
+                      hintText: 'Enter EMAIL ID',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0)
+                      )
+                  ),
+                )),
+
+            Padding(
+                padding: EdgeInsets.only(top: _minimumPadding, bottom: _minimumPadding),
+                child: TextField(
+                  decoration: InputDecoration(
+                      labelText: 'PASSWORD',
+                      hintText: 'Enter Password',
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(30.0)
+                      )
+                  ),
+                )),
+
+
+            Padding(
+                padding: EdgeInsets.only(bottom: _minimumPadding, top: _minimumPadding),
+                child: Row(children: <Widget>[
+                  Expanded(
+                    child: RaisedButton(
+                      color: Colors.blue,
+                      // ignore: expected_token
+                      child: new Text('log in'),
+                      elevation: 10.0,
+                      shape: new RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                      onPressed: () { print('Button Pressed');
+
+                      },
+                    ),
+                  ),
+
+                ],)),
+
+          ],
+        ),
+      ),
     );
   }
-}
-class RandomWords extends StatefulWidget {
-  @override
-  RandomWordsState createState() => new RandomWordsState();
-}
 
+  Widget getImageAsset() {
+
+    AssetImage assetImage = AssetImage('images/myimage.jpeg');
+    Image image = Image(image: assetImage, width: 145.0, height: 195.0,);
+
+    return Container(child: image, margin: EdgeInsets.all(_minimumPadding * 10),);
+  }
+}
