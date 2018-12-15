@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+
 
 void main() => runApp(MyApp());
 
@@ -80,12 +83,16 @@ class LoginPage extends StatelessWidget {
       validator: _passwordvalidation,
       obscureText: true,
       onSaved: (String val) => _password = val),
-      margin: const EdgeInsets.all(20.0));
+      margin: const EdgeInsets.all(20.0)
+      );
 
 
     //Widget for Submit Button
     Widget submitButton = Container(child: RaisedButton(child: new Text("SUBMIT"), padding: EdgeInsets.all(8.0),
-      onPressed: _submitted, 
+      onPressed: (){
+        final welcomeScreen = MaterialPageRoute(builder: (context) => LoadScreen(_email, _password));
+        Navigator.push(context, welcomeScreen);
+      }, 
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0))
       ),
       margin: const EdgeInsets.all(20.0));
@@ -112,13 +119,11 @@ class LoginPage extends StatelessWidget {
 
 class WelcomePage extends StatelessWidget{
 
-  String username = "";
+  String username;
 
   WelcomePage(String _username){
     this.username = _username;
   }
-
-
 
   final _biggerFont = const TextStyle(fontSize: 30.0,fontWeight: FontWeight.bold);
   final _smallerFont = const TextStyle(fontSize: 25.0);
@@ -156,3 +161,61 @@ class WelcomePage extends StatelessWidget{
       );
   }
 }
+
+class LoadScreen extends StatefulWidget{
+  String _username;
+  String _password;
+
+  LoadScreen(String _username,String _password){
+    this._username = _username;
+    this._password = _password;
+  }
+  LoadingScreen createState() => new LoadingScreen(_username, _password);
+
+}
+
+class LoadingScreen extends State<LoadScreen> {
+
+  String _password;
+  String _username;
+
+  LoadingScreen(String _username, String _password){
+    this._username = _username;
+    this._password = _password;
+  }
+
+  @override
+  void initState(){
+    super.initState();
+    Timer(Duration(seconds: 5),(){
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>WelcomePage(_username)));
+    });
+  }
+
+  Widget loadPage(){
+    Widget logo = Container(child: Image.asset('assets/LogoCompBgLess.png',
+      width: 120.0,
+      height: 120.0),
+       margin: const EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 2.0));
+
+    Widget bar = Container(child: LinearProgressIndicator(),
+        margin: const EdgeInsets.all(90.0));
+
+    return Container(child: Column(children: [logo, bar],mainAxisAlignment: MainAxisAlignment.center,
+    crossAxisAlignment: CrossAxisAlignment.center),
+    margin: const EdgeInsets.fromLTRB(60.0, 0.0, 60.0, 0.0)
+    );
+  }
+
+  @override
+  Widget build(BuildContext context){
+    return WillPopScope(
+      onWillPop: ()=>Future.value(false),
+      child: Scaffold(
+        body: loadPage()
+      )
+    );
+  }
+
+} 
+
