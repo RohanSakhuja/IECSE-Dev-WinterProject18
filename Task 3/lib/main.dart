@@ -16,6 +16,23 @@ Future<PostJoke> fetchPostJoke() async {
   
 }
 
+Future<Cats> fetchCats() async {
+  final response = 
+      await http.get("https://api.chucknorris.io/jokes/categories");
+  
+  return Cats.fromJson(json.decode(response.body));
+}
+
+class Cats{
+  final List<String> catList;
+
+  Cats({this.catList});
+
+  factory Cats.fromJson(List<dynamic> json){
+    return(Cats(catList: json.cast<String>().toList()));
+  }
+}
+
 class PostJoke{
   final String value;
   
@@ -59,36 +76,85 @@ class Appyappapp extends StatelessWidget{
   }
 }
 
+class CatPageState extends StatefulWidget{
+  @override
+  createState() => new CatsPage();
+}
+
+class CatsPage extends State<CatPageState>{
+  
+  Future<Cats> postCats = fetchCats();
+
+  List<String> catscats;
+
+  //List<DropdownMenuItem<String>> dropcats = [];
+
+
+  Widget build(BuildContext context){
+    return Scaffold(appBar: AppBar(title: Text("Select Category"),),
+    body: Container(
+      child: FutureBuilder<Cats>(future: postCats, 
+      builder: (context, snapshot){
+          if(snapshot.hasData){
+
+            List <String> catList = snapshot.data.catList;
+           
+           
+           return Container(
+              child: ListView.builder(
+                itemCount: catList.length,
+                itemBuilder: (context, index){
+                  String temp = "";
+                  if (catList[index] != 'any'){
+                    temp = catList[index];
+                  }
+                  return ListTile(title: Text("$temp"),
+                    contentPadding: const EdgeInsets.all(10.0),
+                    onTap: () {
+                      catVal = temp;
+                      Navigator.push(context, 
+                        MaterialPageRoute(builder: (context) => RandomJokes(postJoke:fetchPostJoke())) 
+                      );
+                      print("$catVal");
+                    },
+                  );
+                },
+              ) 
+              );
+          }else if(snapshot.hasError){
+            return Container(child: Text("whoops"));
+          }
+          return CircularProgressIndicator();
+          
+      }
+      
+      ,
+      )
+    ),
+    );
+  }
+
+}
+
+
 class MainPage extends State<StateMainPage>{
   
   final formKey = GlobalKey<FormState>();
-
+  
   Widget categoryDrop(BuildContext context){
-    List<String> catList = ["any","explicit","dev","movie","food","celebrity","science","sport","political","religion","animal","history","music","travel","career","money","fashion"];
-
-    List<DropdownMenuItem<String>> catDropdown = [];
 
     final _Font = const TextStyle(fontSize: 15.0);
 
-    void initLeList(){
-      catDropdown = [];
-      String tempVal = "";
-      for(String each in catList){
-        if(each != "any"){
-           tempVal = each;
-        }
-        catDropdown.add(DropdownMenuItem(child: Text("$each",style: _Font),value:"$tempVal"));
-      }
-    }
-
-    initLeList();
-
     return Container(
-      child: DropdownButton(items: catDropdown, onChanged:(value){
-        setState(() {
-                  catVal = value;
-                });
-      }, value: catVal)
+      child: RaisedButton(
+        child: new Text("Category Page"),
+        padding: EdgeInsets.all(8.0),
+        onPressed: (){
+          final catPage = MaterialPageRoute(builder: (context) => CatPageState());
+          Navigator.push(context, catPage);
+        },
+        shape:  RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
+      )
     );
   }
 
