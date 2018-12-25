@@ -115,7 +115,7 @@ class CatsPage extends State<CatPageState>{
                           onTap: () {
                             catVal = temp;
                             Navigator.push(context,
-                                MaterialPageRoute(builder: (context) => RandomJokes(postJoke:fetchPostingJoke()))
+                                MaterialPageRoute(builder: (context) => RandomJokes(postingJoke:fetchPostingJoke()))
                             );
                             print("$catVal");
                           },
@@ -139,6 +139,42 @@ class CatsPage extends State<CatPageState>{
 }
 
 
+class RandomJokes extends StatelessWidget {
+  Future<PostingJoke> postingJoke;
+
+  RandomJokes({Key key, this.postingJoke}) : super(key: key);
+
+  Widget build(BuildContext context) {
+    final _biggerFont = TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold);
+    final _catFont = TextStyle(fontSize: 15.0);
+
+    return Scaffold(appBar: AppBar(title: Text(" ${catVal}"),),
+        body: Container(child: FutureBuilder<PostingJoke>(
+            future: postingJoke,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Container(child: Center(child: Column(children: [
+                  Text("${snapshot.data.value}", style: _biggerFont),
+                  Text("$catVal", style: _catFont, textAlign: TextAlign.left)
+                ],
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                ),
+                ),
+                    margin: EdgeInsets.all(32.0)
+                );
+              } else if (snapshot.hasError) {
+                return Text("something went wrong :(");
+              }
+              return Center(child: CircularProgressIndicator());
+            }
+        )
+        )
+    );
+  }
+}
+
+// ignore: expected_class_member
 class MainPage extends State<StateMainPage>{
 
   final formKey = GlobalKey<FormState>();
@@ -185,44 +221,4 @@ class MainPage extends State<StateMainPage>{
             ))
     );
   }
-}
-
-
-
-
-class RandomJokes extends StatelessWidget{
-  Future<PostingJoke> postingJoke;
-
-  RandomJokes({Key key, this.postingJoke}) : super(key: key);
-
-  Widget build(BuildContext context){
-
-    final _biggerFont = TextStyle(fontSize: 20.0,fontWeight: FontWeight.bold);
-    final _catFont = TextStyle(fontSize: 15.0);
-
-    return Scaffold(appBar: AppBar(title: Text(" ${catVal}"),),
-        body:Container(child: FutureBuilder<PostingJoke>(
-            future: postingJoke,
-            builder: (context, snapshot){
-              if (snapshot.hasData) {
-                return Container(child:Center(child:Column(children:[
-                  Text("${snapshot.data.value}",style: _biggerFont),
-                  Text("$catVal",style: _catFont,textAlign: TextAlign.left)
-                ],
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                ),
-                ),
-                    margin: EdgeInsets.all(32.0)
-                );
-              } else if (snapshot.hasError) {
-                return Text("something went wrong :(");
-              }
-              return Center(child:CircularProgressIndicator());
-            }
-        )
-        )
-    );
-  }
-
 }
